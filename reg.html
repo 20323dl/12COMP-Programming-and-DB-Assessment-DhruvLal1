@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>replit</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+
+    <!-- firebase start ****************************************-->
+    <!-- Firebase App (core Firebase SDK) is always required & must be listed 1st -->
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-analytics.js"></script>
+    <!-- firebase end ******************************************-->
+    <script src="fb_setup.js"></script>
+    <script src="fb_io.js"></script>
+    <script src="script.js"></script>
+
+  </head>
+</head>
+
+<body>
+
+
+
+  <form onsubmit="return false">
+    <label for="email">Username</label><br>
+    <input type="text" id="email" name="username"><br>
+    <label for="psw">Password </label><br>
+    <input type="password" id="psw" name="password"><br>
+    <input id="btnsubmit" type="button" value="Register!" onclick="fb_login(submitForm)">
+  </form>
+
+</body>
+
+</html>
