@@ -24,15 +24,8 @@ let button;
 let alienAmmount = 5;
 let readScoresInDB;
 
-function getHS() {
-  firebase.database().ref("/HOME/game1/users/" + userObject.userID + "/shooterScoreHS/").once('value', DO_THIS)
-  function DO_THIS(snapshot) {
-    readScoresInDB = snapshot.val()
-    console.log(readScoresInDB)
-  } 
-}
-
 function setup() {
+  highScoreReader();
   console.log("setup: bob");
   cnv = new Canvas(windowWidth, windowHeight);
   //player
@@ -47,7 +40,6 @@ function setup() {
   //img.resize(150, 150)
   //** IMG **/
 
-  getHS();
   //functions
   movement();
   wallGroup = new Group();
@@ -70,7 +62,32 @@ function setup() {
   button.position(0, 0);
   button.mousePressed(resetGame);
   //reset game button
+  //asfaushfdoahsdfoiasdfoijasdfasdfasdfasdf
+  function highScoreReader() {
+    console.log("Readig highscores");
+    firebase.database().ref('/HOME/game1/users/').orderByChild('shooterScoreHS').limitToLast(3).once('value', function(snapshot) {
+      console.log(snapshot.val());
+      snapshot.forEach(savesHighScoreInfo);
+    }, fb_error);
+  }
 }
+
+
+
+// saves firebase highscore items to variable
+function savesHighScoreInfo(child) {
+  console.log(child.val());
+  fb_data = child.val();
+  console.log(fb_data.shooterScoreHS);
+  console.log(fb_data.username);
+}
+//asfaushfdoahsdfoiasdfoijasdfasdfasdfasdf
+
+
+
+
+
+
 //****************************setup()***************************/
 function resetGame() {
   console.log("restart")
@@ -83,7 +100,7 @@ function resetGame() {
   slowGroup.remove();
   healthGroup.remove();
   bulletGroup.remove();
-  
+
   loop();
 }
 //****************************draw()***************************/
@@ -106,8 +123,8 @@ function draw() {
   line(mouseX, mouseY, cir.x, cir.y);
   fill('black');
   textSize(30);
-  text(score, 100, 100);
-  text(readScoresInDB, 150, 100);
+  text("Score: " + score, 15, 40);
+  text("Highscore: " + readScoresInDB, 15, 110);
   if (score > 20) {
     alienAmmount = 12;
   }
@@ -115,13 +132,18 @@ function draw() {
     endGame();
     text("lost becasue you camped", windowWidth / 4, windowHeight / 2 - 100);
   }
-  text(secLeft, windowWidth - 100, 100);
+  //display timer
+  text("campTimer: " + secLeft, width - 205, 60)
   if (health === 0) {
     endGame();
   }
-  text("health", windowWidth / 2, 60)
-  text(health, windowWidth / 2, 100);
-  
+
+  //players health
+  textSize(30);
+  text("Health: " + health, 15, 75);
+
+
+
 }
 //****************************draw()***************************/
 
@@ -162,8 +184,8 @@ function endGame(cir, alienGroup) {
     firebase.database().ref("/HOME/game1/users/" + userObject.userID + "/shooterScoreHS/").set(score);
     readScoresInDB = score;
   }
-  
-  
+
+
   noLoop();
   button.mousePressed(resetGame);
 }
