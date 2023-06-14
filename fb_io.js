@@ -6,6 +6,8 @@ var brosData;
 var userIsLogged = false;
 const USERS_GAME1 = "/HOME/users/game1/"
 const USERS_GAME2 = "/HOME/users/game2/"
+var hasVal = false;
+var userEmail;
 //login -------------------------------------------------------------------------------------------------------------------------
 function fb_login(DO_THIS, callBack) {
   console.log("logging in");
@@ -37,7 +39,7 @@ function fb_login(DO_THIS, callBack) {
         console.log("safd")
         callBack();
       }
-
+      
       // console.log(userObject) //***********NEEEEEEEEEEEED MAYBEEE
       // firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
       // document.getElementById("logOrNot").innerHTML = "hello " + userObject.userName;
@@ -97,8 +99,9 @@ function submitForm() {
 }
 
 function submitFormData() {
-  const userEmail = document.getElementById('email').value;
-  const userPass = document.getElementById('psw').value;
+  var userEmail = document.getElementById('email').value;
+ // console.log(userEmail);
+  var userPass = document.getElementById('psw').value;
   console.log(email.value);
   console.log(psw.value);
   brosData = {
@@ -109,27 +112,39 @@ function submitFormData() {
   console.log(brosData)
   Object.assign(userObject, brosData)
   console.log(userObject)
-  firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(
-    userObject,
-  ).then(_DOTHIS)
-  firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(
-    userObject,
-  ).then(_DOTHIS)
+  VALIDATE();
+  if (hasVal === true) {
+    firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(
+      userObject,
+    ).then(_DOTHIS)
+    firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(
+      userObject,
+    ).then(_DOTHIS)
+  }
   function _DOTHIS() {
     window.location = "gameIndex.html"
   }
 }
 
+
 function VALIDATE() {
-  userName = document.getElementById("text1").value;
-  if (!isNaN(userName) || userName == null || userName == "" || userName == " ") {
-    document.getElementById("message1").innerHTML = "invaild";
-    return false;
+  var userNameVAL = document.getElementById("email").value;
+  if (userNameVAL.length === 0) {
+    console.log("bro rly tried to out nothing in here")
+    document.getElementById("message1").innerHTML = "Invalid: Username cannot be empty, cheeky boy";
+    hasVal = false;
+  } else if (userNameVAL.length > 10) {
+    console.log("of this appears then something went wrong (maxlength is set in html, this is a safety protocol ))")
+    document.getElementById("message1").innerHTML = "Invalid: Username MAXED at 10 characters.";
+    hasVal = false;
   } else {
+    console.log("congrats for loging in")
     document.getElementById("message1").innerHTML = "";
-    alert("hello " + userName);
+    alert("Hello " + userNameVAL);
+    hasVal = true;
   }
 }
+
 // function bobby() {
 //   console.log(userObject)
 // }
