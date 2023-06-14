@@ -1,7 +1,12 @@
 //*******************************************************/
 // P5.play: t01_create_sprite
 // Create a sprite
-// Written by dHRUV 
+// Written by dHRUV
+//3:01pm wed 7 june works
+//7:50pm thrus 8 june works
+//8.29pm thrus 8 june works
+//12:30pm fri 9 june works
+//11:54pm fri 9 june works
 //*******************************************************/
 const TASKNAME = "t01_create_sprite";
 
@@ -22,10 +27,17 @@ let health = 5;
 let button;
 // let freeze;
 let alienAmmount = 5;
-let readScoresInDB;
+let fb_shooterHS;
+let userName_ThatWillBeDisplayed;
+let userHS_ThatWillBeDisplayed;
+let HSList_struggle = [];
+var coolNumber = 0
 
 function setup() {
+  
   highScoreReader();
+  highScoreTable();
+  
   console.log("setup: bob");
   cnv = new Canvas(windowWidth, windowHeight);
   //player
@@ -56,32 +68,49 @@ function setup() {
   bulletGroup = new Group();
   //slow();
   //functions
-  //console.log(readScoresInDB);
+
   //reset game button
   button = createButton('reset');
   button.position(0, 0);
   button.mousePressed(resetGame);
   //reset game button
-  //asfaushfdoahsdfoiasdfoijasdfasdfasdfasdf
-  function highScoreReader() {
-    console.log("Readig highscores");
-    firebase.database().ref('/HOME/game1/users/').orderByChild('shooterScoreHS').limitToLast(3).once('value', function(snapshot) {
-      console.log(snapshot.val());
-      snapshot.forEach(savesHighScoreInfo);
-    }, fb_error);
-  }
+  
+
+
+}
+// ***********************************************************************************************************************HS STUFF
+function highScoreReader() {
+  console.log("Readig highscores");
+  firebase.database().ref(USERS_GAME1 + userObject.userID + '/shooterScoreHS/').once('value', function(snapshot) {
+    console.log(snapshot.val());
+    fb_shooterHS = snapshot.val();
+    snapshot.forEach(savesHighScoreInfo);
+  }, fb_error);
 }
 
 
+function highScoreTable() {
+  console.log("Readig highscores");
+  firebase.database().ref(USERS_GAME1).orderByChild('shooterScoreHS').limitToLast(3).once('value', function(snapshot) {
+    //console.log(snapshot.val());
+    // fb_shooterHS = snapshot.val();
+    snapshot.forEach(savesHighScoreInfo);
+  }, fb_error);
+}
+
+//3:01pm works
 
 // saves firebase highscore items to variable
 function savesHighScoreInfo(child) {
-  console.log(child.val());
+  //console.log(child.val());
   fb_data = child.val();
-  console.log(fb_data.shooterScoreHS);
-  console.log(fb_data.username);
+  HSList_struggle.push(fb_data.shooterScoreHS);
+  HSList_struggle.push(fb_data.username);
+  userName_ThatWillBeDisplayed = fb_data.username
+  userHS_ThatWillBeDisplayed = fb_data.shooterScoreHS
+
 }
-//asfaushfdoahsdfoiasdfoijasdfasdfasdfasdf
+// ***********************************************************************************************************************HS STUFF
 
 
 
@@ -89,8 +118,22 @@ function savesHighScoreInfo(child) {
 
 
 //****************************setup()***************************/
+// ***********************************************************************************************************************HS STUFF
+function HS_TABLE_DISPLAY() {
+  textSize(30);
+  text(HSList_struggle[4], 17, 200);
+  text(HSList_struggle[5], 67, 200);
+  text(HSList_struggle[2], 17, 235);
+  text(HSList_struggle[3], 67, 235);
+  text(HSList_struggle[0], 17, 270);
+  text(HSList_struggle[1], 67, 270);
+}
+
 function resetGame() {
   console.log("restart")
+  //coolNumber = 6;
+  //
+  
   score = 0;
   health = 5;
   alienSpeed = 4;
@@ -100,11 +143,15 @@ function resetGame() {
   slowGroup.remove();
   healthGroup.remove();
   bulletGroup.remove();
-
+  HSList_struggle = []
+  highScoreTable();
+  HS_TABLE_DISPLAY();
   loop();
+  
 }
 //****************************draw()***************************/
 function draw() {
+  //setHighScoreToZERO();
   background('#ceddf5');
   cir.collides(wallGroup, bounceWall);
   cir.collides(slowGroup, freezer); //when cir collides with freeze
@@ -123,8 +170,13 @@ function draw() {
   line(mouseX, mouseY, cir.x, cir.y);
   fill('black');
   textSize(30);
-  text("Score: " + score, 15, 40);
-  text("Highscore: " + readScoresInDB, 15, 110);
+  text("Score: " + score, 17, 40);
+
+  
+  if (fb_shooterHS > 0) {
+    //fb_shooterHS = readScoresInDB
+    text("Highscore: " + fb_shooterHS, 17, 110);
+  }
   if (score > 20) {
     alienAmmount = 12;
   }
@@ -140,8 +192,8 @@ function draw() {
 
   //players health
   textSize(30);
-  text("Health: " + health, 15, 75);
-
+  text("Health: " + health, 17, 75);
+  HS_TABLE_DISPLAY();
 
 
 }
@@ -175,17 +227,22 @@ function healthy(cir, alienGroup) {
   setTimeout(hitOutline, 100)
 
 }
+// **************************************************************************************************** endgame
 function endGame(cir, alienGroup) {
   //cir.remove();
+
   textSize(80);
   text("YOU LOSE: " + score, windowWidth / 4, windowHeight / 2);
-  firebase.database().ref("/HOME/game1/users/" + userObject.userID + "/shooterScore/").set(score);
-  if (score >= readScoresInDB) {
-    firebase.database().ref("/HOME/game1/users/" + userObject.userID + "/shooterScoreHS/").set(score);
-    readScoresInDB = score;
+  // ***********************************************************************************************************************HS STUFF
+  console.log(score > fb_shooterHS)
+  firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScore/").set(score);
+  if (score > fb_shooterHS) {
+    firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScoreHS/").set(score);
+    
+    fb_shooterHS = score;
   }
-
-
+  // ***********************************************************************************************************************HS STUFF
+  
   noLoop();
   button.mousePressed(resetGame);
 }

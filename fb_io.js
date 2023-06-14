@@ -4,8 +4,10 @@ var testWord = "bob";
 var userObject;
 var brosData;
 var userIsLogged = false;
+const USERS_GAME1 = "/HOME/users/game1/"
+const USERS_GAME2 = "/HOME/users/game2/"
 //login -------------------------------------------------------------------------------------------------------------------------
-function fb_login(DO_THIS) {
+function fb_login(DO_THIS, callBack) {
   console.log("logging in");
   firebase.auth().onAuthStateChanged((user) => {
 
@@ -15,7 +17,7 @@ function fb_login(DO_THIS) {
 
       console.log("logged in");
       console.log("checking database");
-      console.log(user);
+      //console.log(user);
 
       // var uid = user.uid;
       // // userID = user.uid;
@@ -28,10 +30,18 @@ function fb_login(DO_THIS) {
       }
 
       //checkBrosID();
-      DO_THIS(userObject);
+      if (DO_THIS != undefined && DO_THIS != '') {
+        DO_THIS(userObject);
+      }
+      if (callBack != undefined) {
+        console.log("safd")
+        callBack();
+      }
+
       // console.log(userObject) //***********NEEEEEEEEEEEED MAYBEEE
-      // firebase.database().ref('/HOME/game1/users/' + userObject.userID + '/').set(userObject);
+      // firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
       // document.getElementById("logOrNot").innerHTML = "hello " + userObject.userName;
+      //highScoreReader_PONG();
     } else {
       console.log("not logged in");
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -45,17 +55,20 @@ function fb_login(DO_THIS) {
       });
     }
   });
+
 }
 
 //new or not --------------------------------------------------------------------------------------------------------------------
 function checkBrosID() {
   console.log("Read Once" + userObject.userID);
-  firebase.database().ref('/HOME/game1/users/' + userObject.userID + '/').once('value', _readReg, fb_error);
+  firebase.database().ref(USERS_GAME1 + userObject.userID + '/').once('value', _readReg, fb_error);
+  firebase.database().ref(USERS_GAME2 + userObject.userID + '/').once('value', _readReg, fb_error);
   console.log("Read Once");
 
   function _readReg(snapshot) {
     if (snapshot.val() == null) {
-      firebase.database().ref('/HOME/game1/users/' + userObject.userID + '/').set(userObject);
+      firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
+      firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(userObject);
       console.log("never seen you before");
       window.location = "reg.html"
     } else {
@@ -96,7 +109,10 @@ function submitFormData() {
   console.log(brosData)
   Object.assign(userObject, brosData)
   console.log(userObject)
-  firebase.database().ref('/HOME/game1/users/' + userObject.userID + '/').set(
+  firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(
+    userObject,
+  ).then(_DOTHIS)
+  firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(
     userObject,
   ).then(_DOTHIS)
   function _DOTHIS() {
@@ -104,10 +120,20 @@ function submitFormData() {
   }
 }
 
-function bobby() {
-  console.log(userObject)
+function VALIDATE() {
+  userName = document.getElementById("text1").value;
+  if (!isNaN(userName) || userName == null || userName == "" || userName == " ") {
+    document.getElementById("message1").innerHTML = "invaild";
+    return false;
+  } else {
+    document.getElementById("message1").innerHTML = "";
+    alert("hello " + userName);
+  }
 }
+// function bobby() {
+//   console.log(userObject)
+// }
 
-function setupShooterGame() {
-  console.log("cool")
-}
+// function setupShooterGame() {
+//   console.log("cool")
+// }

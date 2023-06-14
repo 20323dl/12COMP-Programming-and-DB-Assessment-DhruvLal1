@@ -7,3 +7,18 @@ text("Health: " + health, 10, 70);
 //display timer
 textSize(50);
 text(secLeft, width - 65, 60);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//3:01pm works
