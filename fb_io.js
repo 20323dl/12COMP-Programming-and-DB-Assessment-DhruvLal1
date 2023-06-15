@@ -127,6 +127,12 @@ function submitFormData() {
 }
 
 
+
+
+
+
+
+
 function VALIDATE() {
   var userNameVAL = document.getElementById("email").value;
   if (userNameVAL.length === 0) {
