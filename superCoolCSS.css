@@ -19,6 +19,7 @@ body {
   transition-duration: 0.4s;
   cursor: pointer;
   border-radius: 4px;
+  width: 15%;
 }
 .button1 {
   background-color: white;

@@ -135,9 +135,20 @@ function updateDetails() {
       var userData = snapshot.val();
       //checks if userPass(the input box) == userData.password(whats in yhe db)
       if (userPass == userData.password) {
-        userData.username = userPreferedName;
-        firebase.database().ref(USERS_GAME1 + userObject.userID).set(userData);
-        firebase.database().ref(USERS_GAME2 + userObject.userID).set(userData);
+        // firebase snapshot stuff is called again for each indivual one cause otherise it will make a copy of game1 in game2 in the database
+        firebase.database().ref(USERS_GAME1 + userObject.userID).once('value', function(snapshot) {
+          var userData = snapshot.val();
+          userData.username = userPreferedName;
+          firebase.database().ref(USERS_GAME1 + userObject.userID).set(userData);
+        });
+
+        firebase.database().ref(USERS_GAME2 + userObject.userID).once('value', function(snapshot) {
+          var userData = snapshot.val();
+          userData.username = userPreferedName;
+          firebase.database().ref(USERS_GAME2 + userObject.userID).set(userData);
+        });
+
+
         //waits two seconds just in case of timing issues and saving to db
         setInterval(window.location = "gameIndex.html", 2000)
       } else {
@@ -146,6 +157,9 @@ function updateDetails() {
     });
   }
 }
+
+
+
 
 
 
