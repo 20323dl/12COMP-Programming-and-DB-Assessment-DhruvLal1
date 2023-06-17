@@ -39,7 +39,7 @@ function fb_login(DO_THIS, callBack) {
         console.log("safd")
         callBack();
       }
-      
+
       // console.log(userObject) //***********NEEEEEEEEEEEED MAYBEEE
       // firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
       // document.getElementById("logOrNot").innerHTML = "hello " + userObject.userName;
@@ -100,7 +100,7 @@ function submitForm() {
 
 function submitFormData() {
   var userEmail = document.getElementById('email').value;
- // console.log(userEmail);
+  // console.log(userEmail);
   var userPass = document.getElementById('psw').value;
   console.log(email.value);
   console.log(psw.value);
@@ -126,7 +126,54 @@ function submitFormData() {
   }
 }
 
+function updateDetails() {
+  firebase.database().ref(USERS_GAME1 + userObject.userID).once('value', function(snapshot) {
+    userObject = snapshot.val();
+    console.log(snapshot.val())
+    var userEmail = document.getElementById('email').value;
+    // console.log(userEmail);
+    var userPass = document.getElementById('psw').value;
+    console.log(email.value);
+    console.log(psw.value);
+    userObject.username = userEmail;
+    userObject.password = userPass;
+    console.log(userObject);
+  }, fb_error);
 
+  firebase.database().ref(USERS_GAME2 + userObject.userID).once('value', function(snapshot) {
+    userObject = snapshot.val();
+    var userEmail = document.getElementById('email').value;
+    // console.log(userEmail);
+    var userPass = document.getElementById('psw').value;
+    console.log(email.value);
+    console.log(psw.value);
+    // brosData = {
+    //   username: userEmail,
+    //   password: userPass,
+    //   //usersRealName: user.displayName,
+    // }
+    // console.log(brosData)
+    // Object.assign(userObject, brosData)
+    // console.log(userObject)
+    userObject.username = userEmail;
+    userObject.password = userPass;
+    console.log(userObject);
+    //firebase.database().ref(USERS_GAME1)
+    VALIDATE();
+    if (hasVal === true) {
+      firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(
+        userObject,
+      ).then(_DOTHIS)
+      firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(
+        userObject,
+      ).then(_DOTHIS)
+    }
+    function _DOTHIS() {
+      window.location = "gameIndex.html"
+    }
+  }, fb_error);
+
+}
 
 
 
