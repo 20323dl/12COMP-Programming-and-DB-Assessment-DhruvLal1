@@ -7,7 +7,7 @@ var userIsLogged = false;
 const USERS_GAME1 = "/HOME/users/game1/"
 const USERS_GAME2 = "/HOME/users/game2/"
 var hasVal = false;
-var userEmail;
+var userPreferedName;
 //login -------------------------------------------------------------------------------------------------------------------------
 function fb_login(DO_THIS, callBack) {
   console.log("logging in");
@@ -19,19 +19,15 @@ function fb_login(DO_THIS, callBack) {
 
       console.log("logged in");
       console.log("checking database");
-      //console.log(user);
 
-      // var uid = user.uid;
-      // // userID = user.uid;
-      // // userName = user.displayName;
-      // // ...
+      // my user
       userObject = {
         userID: user.uid,
         userRealName: user.displayName,
         userPhoto: user.photoURL,
       }
 
-      //checkBrosID();
+      // only runs if it is NOT undifended
       if (DO_THIS != undefined && DO_THIS != '') {
         DO_THIS(userObject);
       }
@@ -40,10 +36,6 @@ function fb_login(DO_THIS, callBack) {
         callBack();
       }
 
-      // console.log(userObject) //***********NEEEEEEEEEEEED MAYBEEE
-      // firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
-      // document.getElementById("logOrNot").innerHTML = "hello " + userObject.userName;
-      //highScoreReader_PONG();
     } else {
       console.log("not logged in");
       var provider = new firebase.auth.GoogleAuthProvider();
@@ -63,10 +55,12 @@ function fb_login(DO_THIS, callBack) {
 //new or not --------------------------------------------------------------------------------------------------------------------
 function checkBrosID() {
   console.log("Read Once" + userObject.userID);
+  // adds bro to db :)
   firebase.database().ref(USERS_GAME1 + userObject.userID + '/').once('value', _readReg, fb_error);
   firebase.database().ref(USERS_GAME2 + userObject.userID + '/').once('value', _readReg, fb_error);
   console.log("Read Once");
-
+  
+  // checking if bro is already in db, we tryin welcome everyone here
   function _readReg(snapshot) {
     if (snapshot.val() == null) {
       firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
@@ -94,22 +88,23 @@ function fb_readError(error) {
 
 function submitForm() {
   console.log("in subit form")
+  // parameter is used to make all the user stuff line up with my function so it works 
   fb_login(submitFormData);
 
 }
 
 function submitFormData() {
-  var userEmail = document.getElementById('email').value;
-  // console.log(userEmail);
+  var userPreferedName = document.getElementById('preferedName').value;
   var userPass = document.getElementById('psw').value;
-  console.log(email.value);
+  console.log(preferedName.value);
   console.log(psw.value);
   brosData = {
-    username: userEmail,
+    username: userPreferedName,
     password: userPass,
     //usersRealName: user.displayName,
   }
   console.log(brosData)
+  // smusher
   Object.assign(userObject, brosData)
   console.log(userObject)
   VALIDATE();
@@ -126,66 +121,43 @@ function submitFormData() {
   }
 }
 
+
+
 function updateDetails() {
-  firebase.database().ref(USERS_GAME1 + userObject.userID).once('value', function(snapshot) {
-    userObject = snapshot.val();
-    console.log(snapshot.val())
-    var userEmail = document.getElementById('email').value;
-    // console.log(userEmail);
-    var userPass = document.getElementById('psw').value;
-    console.log(email.value);
-    console.log(psw.value);
-    userObject.username = userEmail;
-    userObject.password = userPass;
-    console.log(userObject);
-  }, fb_error);
-
-  firebase.database().ref(USERS_GAME2 + userObject.userID).once('value', function(snapshot) {
-    userObject = snapshot.val();
-    var userEmail = document.getElementById('email').value;
-    // console.log(userEmail);
-    var userPass = document.getElementById('psw').value;
-    console.log(email.value);
-    console.log(psw.value);
-    // brosData = {
-    //   username: userEmail,
-    //   password: userPass,
-    //   //usersRealName: user.displayName,
-    // }
-    // console.log(brosData)
-    // Object.assign(userObject, brosData)
-    // console.log(userObject)
-    userObject.username = userEmail;
-    userObject.password = userPass;
-    console.log(userObject);
-    //firebase.database().ref(USERS_GAME1)
-    VALIDATE();
-    if (hasVal === true) {
-      firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(
-        userObject,
-      ).then(_DOTHIS)
-      firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(
-        userObject,
-      ).then(_DOTHIS)
-    }
-    function _DOTHIS() {
-      window.location = "gameIndex.html"
-    }
-  }, fb_error);
-
+  VALIDATE();
+  //snatch that data >:)
+  var userPreferedName = document.getElementById('preferedName').value;
+  var userPass = document.getElementById('psw').value;
+  // this will only run if the did it properly
+  if (hasVal == true) {
+    //updater of game1 part
+    firebase.database().ref(USERS_GAME1 + userObject.userID).once('value', function(snapshot) {
+      var userData = snapshot.val();
+      userData.username = userPreferedName;
+      userData.password = userPass;
+      firebase.database().ref(USERS_GAME1 + userObject.userID).set(userData);
+    });
+    //updater of game2 part
+    firebase.database().ref(USERS_GAME2 + userObject.userID).once('value', function(snapshot) {
+      var userData = snapshot.val(); // user data is that section in the db we lookin at
+      // these things r the things we collecting from the database
+      userData.username = userPreferedName;
+      userData.password = userPass;
+      firebase.database().ref(USERS_GAME2 + userObject.userID).set(userData);
+    });
+  }
 }
 
 
 
 
-
-
 function VALIDATE() {
-  var userNameVAL = document.getElementById("email").value;
+  var userNameVAL = document.getElementById("preferedName").value;
   if (userNameVAL.length === 0) {
     console.log("bro rly tried to out nothing in here")
     document.getElementById("message1").innerHTML = "Invalid: Username cannot be empty, cheeky boy";
     hasVal = false;
+    //not really necceray its just a precation
   } else if (userNameVAL.length > 10) {
     console.log("of this appears then something went wrong (maxlength is set in html, this is a safety protocol ))")
     document.getElementById("message1").innerHTML = "Invalid: Username MAXED at 10 characters.";
@@ -197,11 +169,3 @@ function VALIDATE() {
     hasVal = true;
   }
 }
-
-// function bobby() {
-//   console.log(userObject)
-// }
-
-// function setupShooterGame() {
-//   console.log("cool")
-// }

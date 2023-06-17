@@ -30,8 +30,8 @@ let alienAmmount = 5;
 let fb_shooterHS;
 let userName_ThatWillBeDisplayed;
 let userHS_ThatWillBeDisplayed;
-let HSList_struggle = [];
-var coolNumber = 0
+let HSList_shooter = [];
+
 
 function setup() {
   
@@ -104,8 +104,8 @@ function highScoreTable() {
 function savesHighScoreInfo(child) {
   //console.log(child.val());
   fb_data = child.val();
-  HSList_struggle.push(fb_data.shooterScoreHS);
-  HSList_struggle.push(fb_data.username);
+  HSList_shooter.push(fb_data.shooterScoreHS);
+  HSList_shooter.push(fb_data.username);
   userName_ThatWillBeDisplayed = fb_data.username
   userHS_ThatWillBeDisplayed = fb_data.shooterScoreHS
 
@@ -121,19 +121,17 @@ function savesHighScoreInfo(child) {
 // ***********************************************************************************************************************HS STUFF
 function HS_TABLE_DISPLAY() {
   textSize(30);
-  text(HSList_struggle[4], 17, 200);
-  text(HSList_struggle[5], 67, 200);
-  text(HSList_struggle[2], 17, 235);
-  text(HSList_struggle[3], 67, 235);
-  text(HSList_struggle[0], 17, 270);
-  text(HSList_struggle[1], 67, 270);
+  text(HSList_shooter[4], 17, 200);
+  text(HSList_shooter[5], 67, 200);
+  text(HSList_shooter[2], 17, 235);
+  text(HSList_shooter[3], 67, 235);
+  text(HSList_shooter[0], 17, 270);
+  text(HSList_shooter[1], 67, 270);
 }
 
 function resetGame() {
   console.log("restart")
-  //coolNumber = 6;
-  //
-  
+  // resets everything
   score = 0;
   health = 5;
   alienSpeed = 4;
@@ -143,7 +141,7 @@ function resetGame() {
   slowGroup.remove();
   healthGroup.remove();
   bulletGroup.remove();
-  HSList_struggle = []
+  HSList_shooter = []
   highScoreTable();
   HS_TABLE_DISPLAY();
   loop();
@@ -151,7 +149,6 @@ function resetGame() {
 }
 //****************************draw()***************************/
 function draw() {
-  //setHighScoreToZERO();
   background('#ceddf5');
   cir.collides(wallGroup, bounceWall);
   cir.collides(slowGroup, freezer); //when cir collides with freeze
@@ -225,20 +222,16 @@ function healthy(cir, alienGroup) {
   alienGroup.remove();
   setTimeout(hit, 100);
   setTimeout(hitOutline, 100)
-
 }
 // **************************************************************************************************** endgame
 function endGame(cir, alienGroup) {
-  //cir.remove();
-
   textSize(80);
   text("YOU LOSE: " + score, windowWidth / 4, windowHeight / 2);
   // ***********************************************************************************************************************HS STUFF
   console.log(score > fb_shooterHS)
-  firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScore/").set(score);
+  firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScore/").set(score); //regardless of score this will change, this is not the HS
   if (score > fb_shooterHS) {
     firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScoreHS/").set(score);
-    
     fb_shooterHS = score;
   }
   // ***********************************************************************************************************************HS STUFF
@@ -379,7 +372,7 @@ function setBulletPosition(_gun, _round) {
 
 
 //** *************************POWER UPS ************************* **/
-//powerup slows down the aliens\
+//powerup slows down the aliens
 //function only for looks
 function slow() {
   freeze = new Sprite(random(1, windowWidth), random(1, windowHeight), 75, 'k');
@@ -401,16 +394,7 @@ function healthBoost() {
   healthPU.addImage(img1);
   img1.resize(75, 75);
 }
-
-
 //** *************************POWER UPS ************************* **/
-
-
-
-
-//** *************************FIREBASE ************************* **/
-
-
 
 //*******************************************************/
 //  END OF APP
