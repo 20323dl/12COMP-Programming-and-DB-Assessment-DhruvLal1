@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width">
     <title>replit</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
-
+    <link href="superCoolCSS.css" rel="stylesheet" type="text/css" />
     <!-- firebase start ****************************************-->
     <!-- Firebase App (core Firebase SDK) is always required & must be listed 1st -->
     <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
@@ -27,17 +27,17 @@
 <body>
 
 
-
+<div class="center">
   <form onsubmit="return false">
     <p>change ur deatils</p>
     <label for="preferedName">Username</label><br>
     <input type="text" id="preferedName" name="username" maxlength="10"><br>
     <label for="psw">Password </label><br>
     <input type="password" id="psw" name="password"><br>
-    <input id="btnsubmit" type="button" value="Register!" onclick="fb_login(updateDetails)">
+    <input class="button button1" id="btnsubmit" type="button" value="Register!" onclick="fb_login(updateDetails)">
     <h1 id="message1"></h1>
   </form>
-
+</div>
 
 </body>
 

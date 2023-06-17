@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width">
     <title>replit</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
-
+    <link href="superCoolCSS.css" rel="stylesheet" type="text/css" />
     <!-- firebase start ****************************************-->
     <!-- Firebase App (core Firebase SDK) is always required & must be listed 1st -->
     <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
@@ -25,16 +25,25 @@
 </head>
 
 <body onload="fb_login()">
-  <h1>gameiundex</h1>
+  <div class="center">
+    <h1>gameiundex</h1>
 
-  <!-- <a href = "reg.html">reg</a> -->
-  <button><a href="game.html">game</a></button>
-  <button><a href="game2.html">pong</a></button>
-  <p id="logOrNot"></p>
+    <!-- <a href = "reg.html">reg</a> -->
+    <a href="game.html">
+      <button class="button button1">game</button>
+    </a>
+
+    <a href="game2.html">
+    <button class="button button1">pong</button>
+    </a>
+    
+    <a href="CUD.html">
+    <button class="button button1">chnage ur deatlis</button>
+    </a>
+    
+    <p id="logOrNot"></p>
+  </div>
 </body>
 
-<footer>
-  <a href="">chnage user details</a>
-</footer>
 
 </html>

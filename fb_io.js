@@ -59,7 +59,7 @@ function checkBrosID() {
   firebase.database().ref(USERS_GAME1 + userObject.userID + '/').once('value', _readReg, fb_error);
   firebase.database().ref(USERS_GAME2 + userObject.userID + '/').once('value', _readReg, fb_error);
   console.log("Read Once");
-  
+
   // checking if bro is already in db, we tryin welcome everyone here
   function _readReg(snapshot) {
     if (snapshot.val() == null) {
@@ -128,22 +128,21 @@ function updateDetails() {
   //snatch that data >:)
   var userPreferedName = document.getElementById('preferedName').value;
   var userPass = document.getElementById('psw').value;
-  // this will only run if the did it properly
+  // this will only run if they wrote all the sections properly
   if (hasVal == true) {
-    //updater of game1 part
+    //gets the database at that point
     firebase.database().ref(USERS_GAME1 + userObject.userID).once('value', function(snapshot) {
       var userData = snapshot.val();
-      userData.username = userPreferedName;
-      userData.password = userPass;
-      firebase.database().ref(USERS_GAME1 + userObject.userID).set(userData);
-    });
-    //updater of game2 part
-    firebase.database().ref(USERS_GAME2 + userObject.userID).once('value', function(snapshot) {
-      var userData = snapshot.val(); // user data is that section in the db we lookin at
-      // these things r the things we collecting from the database
-      userData.username = userPreferedName;
-      userData.password = userPass;
-      firebase.database().ref(USERS_GAME2 + userObject.userID).set(userData);
+      //checks if userPass(the input box) == userData.password(whats in yhe db)
+      if (userPass == userData.password) {
+        userData.username = userPreferedName;
+        firebase.database().ref(USERS_GAME1 + userObject.userID).set(userData);
+        firebase.database().ref(USERS_GAME2 + userObject.userID).set(userData);
+        //waits two seconds just in case of timing issues and saving to db
+        setInterval(window.location = "gameIndex.html", 2000)
+      } else {
+        alert("you did the wrong password, username NOT changed to " + userPreferedName)
+      }
     });
   }
 }
