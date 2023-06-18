@@ -24,30 +24,21 @@
   </head>
 </head>
 
-<body onload="fb_login()">
+<body>
+
+
   <div class="center">
-    <h1>gameiundex</h1>
-
-    <!-- <a href = "reg.html">reg</a> -->
-    <a href="game.html">
-      <button class="button button1">game</button>
-    </a>
-
-    <a href="game2.html">
-      <button class="button button1">pong</button>
-    </a>
-
-    <a href="CUD.html">
-      <button class="button button1">chnage ur deatlis</button>
-    </a>
-    <a id="HTML_admin_link" 
-      href="admin.html" 
-      style="display:none">
-      <button class="button button1">admin?</button>
-    </a>
-    <p id="logOrNot"></p>
+    <form onsubmit="return false">
+      <p>change ur deatils</p>
+      <label for="preferedName">Username</label><br>
+      <input type="text" id="preferedName" name="username" maxlength="10"><br>
+      <label for="psw">Password </label><br>
+      <input type="password" id="psw" name="password"><br>
+      <input class="button button1" id="btnsubmit" type="button" value="LOGIN!" onclick="fb_login(admin)">
+      <h1 id="message1"></h1>
+    </form>
   </div>
-</body>
 
+</body>
 
 </html>

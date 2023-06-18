@@ -35,6 +35,7 @@ function fb_login(DO_THIS, callBack) {
         console.log("safd")
         callBack();
       }
+      firebase.database().ref("/HOME/admin/" + userObject.userID).once('value', _DISPLAY_ADMIN_BUTTON, fb_error)
 
     } else {
       console.log("not logged in");
@@ -158,8 +159,37 @@ function updateDetails() {
   }
 }
 
+function admin() {
+  VALIDATE();
+  //snatch that data >:)
+  var userPreferedName = document.getElementById('preferedName').value;
+  var userPass = document.getElementById('psw').value;
+  // this will only run if they wrote all the sections properly
+  if (hasVal == true) {
+    //gets the database at that point
+    firebase.database().ref(USERS_GAME1 + userObject.userID).once('value', function(snapshot) {
+      var userData = snapshot.val();
+      //checks if userPass(the input box) == userData.password(whats in yhe db)
+      if ((userPreferedName == "DRUBBLE") && (userPass == userData.password)) {
+
+        //waits two seconds just in case of timing issues and saving to db
+        setInterval(window.location = "admin2.html", 2000)
+      } else {
+        alert("ACCESS DENIED")
+      }
+    });
+  }
+}
 
 
+function _DISPLAY_ADMIN_BUTTON(snapshot) {
+  if (snapshot.val() == true) {
+    console.log("admin!!!")
+    HTML_admin_link.style.display = "block"
+  } else {
+    console.log("npc")
+  }
+}
 
 
 
