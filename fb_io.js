@@ -26,7 +26,7 @@ function fb_login(DO_THIS, callBack) {
         userRealName: user.displayName,
         userPhoto: user.photoURL,
       }
-      
+
       // only runs if it is NOT undifended
       if (DO_THIS != undefined && DO_THIS != '') {
         DO_THIS(userObject);
@@ -160,23 +160,27 @@ function updateDetails() {
 }
 
 function admin() {
-  VALIDATE();
-  //snatch that data >:)
-  var userPreferedName = document.getElementById('preferedName').value;
-  var userPass = document.getElementById('psw').value;
-  // this will only run if they wrote all the sections properly
-  if (hasVal == true) {
-    //gets the admin from database at that point
-    firebase.database().ref("/HOME/admin/" + userObject.userID + "/").once('value', function(snapshot) {
-      var userAdminData = snapshot.val();
-      //checks if admin is really the admin :O
-      if (userAdminData.username == userPreferedName && userAdminData.password == userPass) {
-        //waits two seconds just in case of timing issues and saving to db
-        setInterval(window.location = "admin2.html", 2000)
-      } else {
-        alert("ACCESS DENIED")
-      }
-    });
+  if (userObject.userID == "hw7Cr3R5Dxa3NhnECS8heuHsaJd2") {
+    VALIDATE();
+    //snatch that data >:)
+    var userPreferedName = document.getElementById('preferedName').value;
+    var userPass = document.getElementById('psw').value;
+    // this will only run if they wrote all the sections properly
+    if (hasVal == true) {
+      //gets the admin from database at that point
+      firebase.database().ref("/HOME/admin/" + userObject.userID + "/").once('value', function(snapshot) {
+        var userAdminData = snapshot.val();
+        //checks if admin is really the admin :O
+        if (userAdminData.username == userPreferedName && userAdminData.password == userPass) {
+          //waits two seconds just in case of timing issues and saving to db
+          setInterval(window.location = "admin2.html", 2000)
+        } else {
+          alert("ACCESS DENIED")
+        }
+      });
+    }
+  } else {
+    alert("fuck off")
   }
 }
 
