@@ -1,13 +1,14 @@
 //vars  -------------------------------------------------------------------------------------------------------------------------
 //var score = 1;
+//2:51pm works 20th June 
 var testWord = "bob";
 var userObject;
 var brosData;
-var userIsLogged = false;
 const USERS_GAME1 = "/HOME/users/game1/"
 const USERS_GAME2 = "/HOME/users/game2/"
 var hasVal = false;
 var userPreferedName;
+var userIsLoggedIn = false;
 //login -------------------------------------------------------------------------------------------------------------------------
 function fb_login(DO_THIS, callBack) {
   console.log("logging in");
@@ -27,6 +28,9 @@ function fb_login(DO_THIS, callBack) {
         userPhoto: user.photoURL,
       }
 
+      userIsLoggedIn = true;
+      sessionStorage.setItem("loginStatus", userIsLoggedIn);
+
       // only runs if it is NOT undifended
       if (DO_THIS != undefined && DO_THIS != '') {
         DO_THIS(userObject);
@@ -36,6 +40,7 @@ function fb_login(DO_THIS, callBack) {
         callBack();
       }
       firebase.database().ref("/HOME/admin/" + userObject.userID).once('value', _DISPLAY_ADMIN_BUTTON, fb_error)
+      document.getElementById("pfp").src = userObject.userPhoto;
 
     } else {
       console.log("not logged in");
@@ -95,6 +100,7 @@ function submitForm() {
 }
 
 function submitFormData() {
+  document.getElementById("btnsubmit").disabled = true;
   var userPreferedName = document.getElementById('preferedName').value;
   var userPass = document.getElementById('psw').value;
   console.log(preferedName.value);
@@ -116,6 +122,8 @@ function submitFormData() {
     firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(
       userObject,
     ).then(_DOTHIS)
+  } else {
+    document.getElementById("btnsubmit").disabled = false;
   }
   function _DOTHIS() {
     window.location = "gameIndex.html"
@@ -195,13 +203,52 @@ function _DISPLAY_ADMIN_BUTTON(snapshot) {
 }
 
 
+function fb_displayAdminTable() {
+  // Retrieve data from the Firebase database
+  firebase.database().ref("HOME/users/game1").once('value', function(snapshot) {
 
+    var userIDArray = []; // Empty array to store userID values
+
+    // creates the list by pushing the userID's in ;)
+    snapshot.forEach(function(childSnapshot) {
+      var userObject = childSnapshot.val();
+      var userID = userObject.userID;
+      userIDArray.push(userID);
+    });
+
+    var tableBody = document.querySelector("#userTable tbody"); // Get the table body element so we can seu it
+
+    // Loop through each userID in the array and create table rows
+    userIDArray.forEach(function(userID) {
+      var row = document.createElement("tr"); // Create a new table row
+      var userIDCell = document.createElement("td"); // Create a new table cell for userID
+      userIDCell.textContent = userID; // Set the text content of the cell to the userID
+      row.appendChild(userIDCell); // Append the userID cell to the row
+      tableBody.appendChild(row); // Append the row to the table body
+    });
+
+  }, fb_error);
+
+}
+
+function loginText() {
+  userIsLoggedIn = sessionStorage.getItem("loginStatus");
+  console.log(userIsLoggedIn);
+  if (userIsLoggedIn == "true") {
+    document.getElementById("LogOrNot").innerHTML = "Logged In";
+  } else {
+    document.getElementById("LogOrNot").innerHTML = "NOT Logged In";
+    alert("NOT logged in")
+    window.location = "index.html"
+  }
+}
 
 function VALIDATE() {
   var userNameVAL = document.getElementById("preferedName").value;
-  if (userNameVAL.length === 0) {
+  var userPassVAL = document.getElementById("psw").value;
+  if ((userNameVAL.length === 0) || (userPassVAL.length === 0) || ((userNameVAL.length === 0) && (userPassVAL.length === 0))) {
     console.log("bro rly tried to out nothing in here")
-    document.getElementById("message1").innerHTML = "Invalid: Username cannot be empty, cheeky boy";
+    document.getElementById("message1").innerHTML = "Invalid: Inputs cannot be empty, cheeky boy";
     hasVal = false;
     //not really necceray its just a precation
   } else if (userNameVAL.length > 10) {
@@ -215,3 +262,6 @@ function VALIDATE() {
     hasVal = true;
   }
 }
+
+
+

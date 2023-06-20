@@ -9,6 +9,7 @@
     <title>replit</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
     <link href="superCoolCSS.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <!-- firebase start ****************************************-->
     <!-- Firebase App (core Firebase SDK) is always required & must be listed 1st -->
     <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-app.js"></script>
@@ -24,29 +25,35 @@
   </head>
 </head>
 
-<body onload="fb_login()">
+<body onload="fb_login(); loginText();">
+  <h2 id="LogOrNot"></h2>
+  <img class="w3-display-topright w3-circle" style="padding: 35px; width: 5%; min-width: 125px" id="pfp">
   <div class="center">
-    <h1>gameiundex</h1>
-
-    <!-- <a href = "reg.html">reg</a> -->
-    <a href="game.html">
-      <button class="button button1">game</button>
-    </a>
-
-    <a href="game2.html">
-      <button class="button button1">pong</button>
-    </a>
+    <h1 class="font">GAME INDEX</h1>
 
     <a href="CUD.html">
-      <button class="button button1">chnage ur deatlis</button>
+      <button class="button button1">Change Your Details</button>
     </a>
-    <a id="HTML_admin_link" 
-      href="admin.html" 
-      style="display:none">
+    <a id="HTML_admin_link" href="admin.html" style="display:none">
       <button class="button button1">admin?</button>
     </a>
-    <p id="logOrNot"></p>
+
+    <div class="w3-row w3-content">
+      <div class="w3-half w3-hover-opacity">
+        <a href="game2.html"><img style="padding: 35px; width: 100%" class="max-img-w" src="/images/gameIndex/pong.png"
+            alt="" /></a>
+        <h3 class="font">Shooter game</h3>
+        <p class="font">WASD controls, shoot the aliens, shoot by moving curser and left click to shoot </p>
+      </div>
+      <div class="w3-half w3-hover-opacity">
+        <a href="game.html"><img style="padding: 35px; width: 100%" class="max-img-w"
+            src="/images/gameIndex/shooterGame.png" alt="" /></a>
+        <h3 class="font">Pong game</h3>
+        <p class="font">W and S controls up and down paddle and reflect ball </p>
+      </div>
+    </div>
   </div>
+<!-- WRONG WAY AROUND FIX LATER  -->
 </body>
 
 

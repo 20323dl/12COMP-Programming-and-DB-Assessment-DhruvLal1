@@ -1,12 +1,22 @@
 body {
   font-family: 'Courier Prime', monospace;
+  font-size: 32px;
+  color: black;
+}
+.font {
+  font-family: 'Courier Prime', monospace;
 }
 
 .center {
   text-align: center;
   border: 3px solid green;
+  padding: 20px;
+  position: absolute;
+  top: 50%; right: 50%;
+  transform: translate(50%,-50%);
 }
 .button {
+  font-family: 'Courier Prime', monospace;
   background-color: #4CAF50; /* Green */
   border: none;
   color: white;
@@ -14,7 +24,7 @@ body {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 2rem;
   margin: 4px 2px;
   transition-duration: 0.4s;
   cursor: pointer;
@@ -22,7 +32,6 @@ body {
   
 }
 .button1 {
-  width: 15%;
   background-color: white;
   color: black;
   border: 2px solid #555555;
@@ -33,10 +42,11 @@ body {
   color: white;
 }
 
-
+.indexTitle {
+  font-size: 8rem;
+}
 
 input {
-  width: 15%;
   padding: 12px 20px;
   margin: 8px 0;
   text-align: center;
