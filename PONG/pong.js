@@ -1,5 +1,5 @@
 //basic
-let score = 0;
+let score_PONG = 0;
 let game;
 let fb_pongHS;
 let HSList_pong = []
@@ -32,6 +32,9 @@ function setup() {
   button_PONG = createButton('reset');
   button_PONG.position(0, 0);
   button_PONG.mousePressed(resetGame_PONG);
+  button_BACK_PONG = createButton('back');
+  button_BACK_PONG.position(50, 0);
+  button_BACK_PONG.mousePressed(backHome_PONG);
   //reset game button_PONG
 }
 
@@ -42,27 +45,28 @@ function draw() {
   wallGroup.stroke = color("white");
   fill(255);
   textSize(20);
-  text(score, 100, 100);
+  text(score_PONG, 100, 100);
   HS_TABLE_DISPLAY_PONG();
 }
 
 function scoreFunction() {
-  score++;
+  score_PONG++;
 }
 function dead() {
-  console.log(score > fb_pongHS)
+  console.log(score_PONG > fb_pongHS)
   ball.vel.y = 0;
   ball.vel.x = 0;
   text("game over", 310, 310);
 
-  firebase.database().ref(USERS_GAME2 + userObject.userID + "/pongScore/").set(score);
-  if (score > fb_pongHS) {
-    firebase.database().ref(USERS_GAME2 + userObject.userID + "/pongScoreHS/").set(score);
-    fb_pongHS = score;
+  firebase.database().ref(USERS_GAME2 + userObject.userID + "/pongScore/").set(score_PONG);
+  if (score_PONG > fb_pongHS) {
+    firebase.database().ref(USERS_GAME2 + userObject.userID + "/pongScoreHS/").set(score_PONG);
+    fb_pongHS = score_PONG;
   }
 
   noLoop();
-  button_PONG.mousePressed(resetGame);
+  button_PONG.mousePressed();
+  button_BACK_PONG.mousePressed();
 }
 
 function movement() {
@@ -116,7 +120,7 @@ function HS_TABLE_DISPLAY_PONG() {
 
 function resetGame_PONG() {
   console.log("restart")
-  score = 0;
+  score_PONG = 0;
   ball.pos.x = windowWidth / 4
   ball.pos.y = random(50, windowHeight - 50)
   HSList_pong = []
@@ -125,6 +129,10 @@ function resetGame_PONG() {
   highScoreTable_PONG();
   HS_TABLE_DISPLAY_PONG();
   loop();
+}
+
+function backHome_PONG() {
+  window.location = "/HTML/gameIndex.html"
 }
 
 

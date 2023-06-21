@@ -1,7 +1,7 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //vars  -------------------------------------------------------------------------------------------------------------------------
 //var score = 1;
 //2:51pm works 20th June 
-var testWord = "bob";
 var userObject;
 var brosData;
 const USERS_GAME1 = "/HOME/users/game1/"
@@ -72,10 +72,10 @@ function checkBrosID() {
       firebase.database().ref(USERS_GAME1 + userObject.userID + '/').set(userObject);
       firebase.database().ref(USERS_GAME2 + userObject.userID + '/').set(userObject);
       console.log("never seen you before");
-      window.location = "reg.html"
+      window.location = "/HTML/reg.html"
     } else {
       console.log("welcome back")
-      window.location = "gameIndex.html"
+      window.location = "/HTML/gameIndex.html"
     }
   }
 }
@@ -126,7 +126,7 @@ function submitFormData() {
     document.getElementById("btnsubmit").disabled = false;
   }
   function _DOTHIS() {
-    window.location = "gameIndex.html"
+    window.location = "/HTML/gameIndex.html"
   }
 }
 
@@ -159,7 +159,7 @@ function updateDetails() {
 
 
         //waits two seconds just in case of timing issues and saving to db
-        setInterval(window.location = "gameIndex.html", 2000)
+        setInterval(window.location = "/HTML/gameIndex.html", 2000)
       } else {
         alert("you did the wrong password, username NOT changed to " + userPreferedName)
       }
@@ -181,7 +181,7 @@ function admin() {
         //checks if admin is really the admin :O
         if (userAdminData.username == userPreferedName && userAdminData.password == userPass) {
           //waits two seconds just in case of timing issues and saving to db
-          setInterval(window.location = "admin2.html", 2000)
+          setInterval(window.location = "/HTML/admin2.html", 2000)
         } else {
           alert("ACCESS DENIED")
         }

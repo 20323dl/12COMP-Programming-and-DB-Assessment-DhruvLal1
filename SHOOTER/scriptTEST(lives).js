@@ -7,6 +7,7 @@
 //8.29pm thrus 8 june works
 //12:30pm fri 9 june works
 //11:54pm fri 9 june works
+//2:38pm wed 21 june works
 //*******************************************************/
 const TASKNAME = "t01_create_sprite";
 
@@ -19,18 +20,18 @@ function preload() {
 //****************************IMG***************************/
 
 //****************************setup()***************************/
-let score = 0;
+let score_Shooter= 0;
 let alienSpeed = 4;
 const DISTANCE_THRESHOLD = 200; //radius of cir to not spawn kill
 let secLeft = 6;
-let health = 5;
+let health_Shooter = 5;
 let button;
 // let freeze;
 let alienAmmount = 5;
-let fb_shooterHS;
+let fb_ShooterHS;
 let userName_ThatWillBeDisplayed;
 let userHS_ThatWillBeDisplayed;
-let HSList_shooter = [];
+let HSList_Shooter = [];
 
 
 function setup() {
@@ -73,6 +74,9 @@ function setup() {
   button = createButton('reset');
   button.position(0, 0);
   button.mousePressed(resetGame);
+  button_BACK_SHOOTER = createButton('back');
+  button_BACK_SHOOTER.position(50, 0);
+  button_BACK_SHOOTER.mousePressed(backHome_SHOOTER);
   //reset game button
   
 
@@ -83,7 +87,7 @@ function highScoreReader() {
   console.log("Readig highscores");
   firebase.database().ref(USERS_GAME1 + userObject.userID + '/shooterScoreHS/').once('value', function(snapshot) {
     console.log(snapshot.val());
-    fb_shooterHS = snapshot.val();
+    fb_ShooterHS = snapshot.val();
     snapshot.forEach(savesHighScoreInfo);
   }, fb_error);
 }
@@ -93,7 +97,7 @@ function highScoreTable() {
   console.log("Readig highscores");
   firebase.database().ref(USERS_GAME1).orderByChild('shooterScoreHS').limitToLast(3).once('value', function(snapshot) {
     //console.log(snapshot.val());
-    // fb_shooterHS = snapshot.val();
+    // fb_ShooterHS = snapshot.val();
     snapshot.forEach(savesHighScoreInfo);
   }, fb_error);
 }
@@ -104,8 +108,8 @@ function highScoreTable() {
 function savesHighScoreInfo(child) {
   //console.log(child.val());
   fb_data = child.val();
-  HSList_shooter.push(fb_data.shooterScoreHS);
-  HSList_shooter.push(fb_data.username);
+  HSList_Shooter.push(fb_data.shooterScoreHS);
+  HSList_Shooter.push(fb_data.username);
   userName_ThatWillBeDisplayed = fb_data.username
   userHS_ThatWillBeDisplayed = fb_data.shooterScoreHS
 
@@ -121,19 +125,19 @@ function savesHighScoreInfo(child) {
 // ***********************************************************************************************************************HS STUFF
 function HS_TABLE_DISPLAY() {
   textSize(30);
-  text(HSList_shooter[4], 17, 200);
-  text(HSList_shooter[5], 67, 200);
-  text(HSList_shooter[2], 17, 235);
-  text(HSList_shooter[3], 67, 235);
-  text(HSList_shooter[0], 17, 270);
-  text(HSList_shooter[1], 67, 270);
+  text(HSList_Shooter[4], 17, 200);
+  text(HSList_Shooter[5], 67, 200);
+  text(HSList_Shooter[2], 17, 235);
+  text(HSList_Shooter[3], 67, 235);
+  text(HSList_Shooter[0], 17, 270);
+  text(HSList_Shooter[1], 67, 270);
 }
 
 function resetGame() {
   console.log("restart")
   // resets everything
-  score = 0;
-  health = 5;
+  score_Shooter= 0;
+  health_Shooter = 5;
   alienSpeed = 4;
   alienAmmount = 5;
   secLeft = 6;
@@ -141,11 +145,14 @@ function resetGame() {
   slowGroup.remove();
   healthGroup.remove();
   bulletGroup.remove();
-  HSList_shooter = []
+  HSList_Shooter = []
   highScoreTable();
   HS_TABLE_DISPLAY();
   loop();
-  
+}
+
+function backHome_SHOOTER() {
+  window.location = "/HTML/gameIndex.html"
 }
 //****************************draw()***************************/
 function draw() {
@@ -153,7 +160,7 @@ function draw() {
   cir.collides(wallGroup, bounceWall);
   cir.collides(slowGroup, freezer); //when cir collides with freeze
   cir.collides(healthGroup, healthBooster); //when cir collides with healthPU
-  cir.collides(alienGroup, healthy);
+  cir.collides(alienGroup, userShooterHealth);
   cir.rotateTo(mouse, 50);
   bullet.collides(wallGroup, delBullet)
   bullet.collides(alienGroup, delAlien)
@@ -167,14 +174,14 @@ function draw() {
   line(mouseX, mouseY, cir.x, cir.y);
   fill('black');
   textSize(30);
-  text("Score: " + score, 17, 40);
+  text("Score: " + score_Shooter, 17, 40);
 
   
-  if (fb_shooterHS > 0) {
-    //fb_shooterHS = readScoresInDB
-    text("Highscore: " + fb_shooterHS, 17, 110);
+  if (fb_ShooterHS > 0) {
+    //fb_ShooterHS = readScoresInDB
+    text("Highscore: " + fb_ShooterHS, 17, 110);
   }
-  if (score > 20) {
+  if (score_Shooter> 20) {
     alienAmmount = 12;
   }
   if (secLeft === 0) {
@@ -183,13 +190,13 @@ function draw() {
   }
   //display timer
   text("campTimer: " + secLeft, width - 205, 60)
-  if (health === 0) {
+  if (health_Shooter === 0) {
     endGame();
   }
 
   //players health
   textSize(30);
-  text("Health: " + health, 17, 75);
+  text("Health: " + health_Shooter, 17, 75);
   HS_TABLE_DISPLAY();
 
 
@@ -213,12 +220,12 @@ function bounceWall(cir, wall) {
   cir.vel.x = 0;
   cir.vel.y = 0;
 }
-function healthy(cir, alienGroup) {
+function userShooterHealth(cir, alienGroup) {
   cir.color = color("white");
   cir.stroke = color("white");
   const hit = () => cir.color = color("red");
   const hitOutline = () => cir.stroke = color("red");
-  health--;
+  health_Shooter--;
   alienGroup.remove();
   setTimeout(hit, 100);
   setTimeout(hitOutline, 100)
@@ -226,18 +233,19 @@ function healthy(cir, alienGroup) {
 // **************************************************************************************************** endgame
 function endGame(cir, alienGroup) {
   textSize(80);
-  text("YOU LOSE: " + score, windowWidth / 4, windowHeight / 2);
+  text("YOU LOSE: " + score_Shooter, windowWidth / 4, windowHeight / 2);
   // ***********************************************************************************************************************HS STUFF
-  console.log(score > fb_shooterHS)
-  firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScore/").set(score); //regardless of score this will change, this is not the HS
-  if (score > fb_shooterHS) {
-    firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScoreHS/").set(score);
-    fb_shooterHS = score;
+  console.log(score_Shooter> fb_ShooterHS)
+  firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScore/").set(score_Shooter); //regardless of score_Shooterthis will change, this is not the HS
+  if (score_Shooter> fb_ShooterHS) {
+    firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScoreHS/").set(score_Shooter);
+    fb_ShooterHS = score_Shooter;
   }
   // ***********************************************************************************************************************HS STUFF
   
   noLoop();
   button.mousePressed(resetGame);
+  button_BACK_SHOOTER.mousePressed(backHome_SHOOTER);
 }
 function delBullet(wallGroup, bullet) {
   wallGroup.remove();
@@ -245,7 +253,7 @@ function delBullet(wallGroup, bullet) {
 function delAlien(alienGroup, bullet) {
   bullet.remove();
   alienGroup.remove();
-  score++
+  score_Shooter++
 }
 
 //calls this when cir hits freeze(the powerup)
@@ -257,7 +265,7 @@ function freezer(cir, freeze) {
 }
 //calls this when cir hits healthPU
 function healthBooster(cir, healthPU) {
-  health = 5;
+  health_Shooter = 5;
   healthPU.remove();
 }
 //****************************colliding functions***************************

@@ -30,20 +30,21 @@
 
   <!-- JQUERY ************************************************-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="scriptTEST(lives).js"></script>
-  <script src="fb_setup.js"></script>
-  <script src="fb_io.js"></script>
-  <script src="script.js"></script>
+
+  <script src="/FIREBASE/fb_setup.js"></script>
+  <script src="/FIREBASE/fb_io.js"></script>
+  <script src="/PONG/pong.js"></script>
+  <script src="/FIREBASE/script.js"></script>
 </head>
 
 <!--*************************************************************
   BODY
 **************************************************************-->
 
-<body onload="fb_login()">
-
+<body onload="fb_login('', highScoreReader_PONG)">
+  <h3 id="bob" class="score"></h3>
+  <h1 id="lose" class="lose"></h1>
 </body>
-
 
 </html>
 <!--*************************************************************
