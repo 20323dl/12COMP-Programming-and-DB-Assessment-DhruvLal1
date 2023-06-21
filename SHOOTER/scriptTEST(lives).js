@@ -1,6 +1,4 @@
 //*******************************************************/
-// P5.play: t01_create_sprite
-// Create a sprite
 // Written by dHRUV
 //3:01pm wed 7 june works
 //7:50pm thrus 8 june works
@@ -9,7 +7,6 @@
 //11:54pm fri 9 june works
 //2:38pm wed 21 june works
 //*******************************************************/
-const TASKNAME = "t01_create_sprite";
 
 //*******************************************************/
 //****************************IMG***************************/
@@ -20,7 +17,6 @@ function preload() {
 //****************************IMG***************************/
 
 //****************************setup()***************************/
-let score_Shooter= 0;
 let alienSpeed = 4;
 const DISTANCE_THRESHOLD = 200; //radius of cir to not spawn kill
 let secLeft = 6;
@@ -28,14 +24,10 @@ let health_Shooter = 5;
 let button;
 // let freeze;
 let alienAmmount = 5;
-let fb_ShooterHS;
-let userName_ThatWillBeDisplayed;
-let userHS_ThatWillBeDisplayed;
-let HSList_Shooter = [];
+
 
 
 function setup() {
-  
   highScoreReader();
   highScoreTable();
   
@@ -47,11 +39,6 @@ function setup() {
   cir.color = color("red");
   cir.stroke = color("red");
   //player
-
-  //** IMG **/
-  //cir.addImage(img);
-  //img.resize(150, 150)
-  //** IMG **/
 
   //functions
   movement();
@@ -83,43 +70,8 @@ function setup() {
 
 }
 // ***********************************************************************************************************************HS STUFF
-function highScoreReader() {
-  console.log("Readig highscores");
-  firebase.database().ref(USERS_GAME1 + userObject.userID + '/shooterScoreHS/').once('value', function(snapshot) {
-    console.log(snapshot.val());
-    fb_ShooterHS = snapshot.val();
-    snapshot.forEach(savesHighScoreInfo);
-  }, fb_error);
-}
 
-
-function highScoreTable() {
-  console.log("Readig highscores");
-  firebase.database().ref(USERS_GAME1).orderByChild('shooterScoreHS').limitToLast(3).once('value', function(snapshot) {
-    //console.log(snapshot.val());
-    // fb_ShooterHS = snapshot.val();
-    snapshot.forEach(savesHighScoreInfo);
-  }, fb_error);
-}
-
-//3:01pm works
-
-// saves firebase highscore items to variable
-function savesHighScoreInfo(child) {
-  //console.log(child.val());
-  fb_data = child.val();
-  HSList_Shooter.push(fb_data.shooterScoreHS);
-  HSList_Shooter.push(fb_data.username);
-  userName_ThatWillBeDisplayed = fb_data.username
-  userHS_ThatWillBeDisplayed = fb_data.shooterScoreHS
-
-}
 // ***********************************************************************************************************************HS STUFF
-
-
-
-
-
 
 //****************************setup()***************************/
 // ***********************************************************************************************************************HS STUFF
@@ -235,12 +187,7 @@ function endGame(cir, alienGroup) {
   textSize(80);
   text("YOU LOSE: " + score_Shooter, windowWidth / 4, windowHeight / 2);
   // ***********************************************************************************************************************HS STUFF
-  console.log(score_Shooter> fb_ShooterHS)
-  firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScore/").set(score_Shooter); //regardless of score_Shooterthis will change, this is not the HS
-  if (score_Shooter> fb_ShooterHS) {
-    firebase.database().ref(USERS_GAME1 + userObject.userID + "/shooterScoreHS/").set(score_Shooter);
-    fb_ShooterHS = score_Shooter;
-  }
+   writesSHOOTERscoresToDB();
   // ***********************************************************************************************************************HS STUFF
   
   noLoop();
