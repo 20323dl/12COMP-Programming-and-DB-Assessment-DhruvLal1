@@ -188,7 +188,7 @@ function admin() {
       });
     }
   } else {
-    alert("fuck off")
+    alert("ACESS DENIED");
   }
 }
 
